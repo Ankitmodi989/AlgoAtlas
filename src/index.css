@@ -1,0 +1,21 @@
+@import "tailwindcss";
+:root{
+     --background-image: url('./assets\pexels-codioful-7130872 (1).jpg');
+     --primary-color: black;
+     --navbar-bg: rgba(255, 255, 255, 0.8);
+     --navbar-color:black;
+}
+[data-theme="dark"]{
+    --background-image: url('./assets/opoy7.jpg');
+    --primary-color: white;
+    --navbar-bg: rgb(21, 13, 22);
+    --navbar-color: white;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    background-image: var(--background-image);
+    background-size: cover;
+    color: var(--primary-color);
+}
