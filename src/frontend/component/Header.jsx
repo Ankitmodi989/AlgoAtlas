@@ -18,9 +18,9 @@ const Header = () => {
           {dark ? <span onClick={() => setDark(false)}>Light</span> : <span onClick={() => setDark(true)}>Dark</span>}
         </div>
         <div className="login cursor-pointer  hover:text-red-500">Login</div>
-        <div className="div cursor-pointer hover:text-red-500">Signin</div>
-      </div>
-
+        <div className="div cursor-pointer hover:text-red-500">SignUp</div>
+        </div>
+        
     </div>
 
   )
