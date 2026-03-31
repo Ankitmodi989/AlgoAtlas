@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react'
 import './App.css'
 import Content from './frontend/component/content'
@@ -10,10 +9,8 @@ function App() {
  
   return (
     <ThemeProvider>
-    {/* <div className="App"> */}
      <Header></Header>
      <Content></Content>
-    {/* </div> */}
     </ThemeProvider>
   )
 }
