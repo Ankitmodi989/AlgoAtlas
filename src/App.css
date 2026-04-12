@@ -1,0 +1,75 @@
+/* ===== QUIZ STYLES ===== */
+.quiz-box {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  background: var(--card-bg);
+  color: var(--card-text-color);
+  text-align: center;
+}
+
+.quiz-box h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.quiz-box ul {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+  margin: 1rem auto;
+  max-width: 300px;
+}
+
+.quiz-box ul li {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.quiz-btn {
+  background: #2563eb;
+  color: white;
+  padding: 12px 32px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.option-btn {
+  padding: 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  background: var(--card-bg);
+  color: var(--card-text-color);
+  transition: all 0.2s;
+}
+
+.option-btn.correct { background: #22c55e; color: white; }
+.option-btn.wrong   { background: #ef4444; color: white; }
+
+.progress-bar {
+  background: #e2e8f0;
+  border-radius: 999px;
+  height: 8px;
+  margin: 1rem 0;
+}
+
+.progress-bar div {
+  background: #2563eb;
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.3s;
+}
