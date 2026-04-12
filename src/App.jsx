@@ -6,7 +6,7 @@ import Header from './frontend/component/Header'
 import { ThemeProvider } from './frontend/component/ThemeProvider';
 import Algo_page from './frontend/component/Algo_page'
 import { useState } from 'react'
-import Favour from './frontend/component/Favour'
+import Favour from './frontend/component/Favour '
 
 function App() {
   const [favour,setfavour]=useState([]);
