@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { ThemeContext } from './ThemeProvider'
-import logo from '../../assets/logo2.0.jpeg'
+import logo from '../../assets/unnamed.jpg'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogOut } from 'lucide-react'
 
