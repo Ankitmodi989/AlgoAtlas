@@ -7,6 +7,7 @@ import { ThemeProvider } from './frontend/component/ThemeProvider';
 import Algo_page from './frontend/component/Algo_page'
 import { useState } from 'react'
 import Favour from './frontend/component/Favour'
+import Chatbot from './frontend/component/Chatbot'; 
 
 function App() {
   const [favour,setfavour]=useState([]);
@@ -37,6 +38,7 @@ function App() {
           />
           <Route path='/algo/:id' element={<Algo_page/>}></Route>
         </Routes>
+        <Chatbot />
       </ThemeProvider>
     
   )
