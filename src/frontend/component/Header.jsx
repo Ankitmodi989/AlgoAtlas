@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { ThemeContext } from './ThemeProvider'
 import { useAuth } from './AuthContext'
-import logo from '../../assets/logo2.0.jpeg'
+import logo from '../../assets/unnamed.jpg.jpeg'
 import { Link, useNavigate } from 'react-router-dom';
 
 const Header = () => {
