@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 
-
 const INPUT = {
   width: "100%",
   padding: "11px 14px",
@@ -13,18 +12,14 @@ const INPUT = {
   fontSize: 14,
   outline: "none",
   boxSizing: "border-box",
-  transition: "border-color 0.2s",
   fontFamily: "inherit",
 };
 
-const focusStyle = { borderColor: "rgba(99,102,241,0.8)" };
-
 export default function AuthPage() {
-  const [mode, setMode] = useState("login"); // "login" | "signup"
+  const [mode, setMode] = useState("login");
   const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [focused, setFocused] = useState("");
   const { login, signup } = useAuth();
   const navigate = useNavigate();
 
@@ -49,20 +44,13 @@ export default function AuthPage() {
     const errs = validate();
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setLoading(true);
-
-    // simulate tiny async delay for UX feel
     await new Promise(r => setTimeout(r, 500));
-
     const result = mode === "login"
       ? login(form.email, form.password)
       : signup(form.name, form.email, form.password);
-
     setLoading(false);
-    if (result.ok) {
-      navigate("/");
-    } else {
-      setErrors({ general: result.error });
-    }
+    if (result.ok) navigate("/");
+    else setErrors({ general: result.error });
   }
 
   function switchMode(m) {
@@ -80,14 +68,8 @@ export default function AuthPage() {
       alignItems: "center",
       justifyContent: "center",
       padding: "2rem 1rem",
-      position: "relative",
-      overflow: "hidden",
     }}>
-
-
-      {/* ── Card ── */}
       <div style={{
-        position: "relative", zIndex: 1,
         width: "100%", maxWidth: 420,
         background: "var(--card-bg)",
         border: "1px solid rgba(255,255,255,0.1)",
@@ -130,67 +112,56 @@ export default function AuthPage() {
         {/* Form */}
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
 
-          {/* General error */}
           {errors.general && (
             <div style={{ background: "#ef444420", border: "1px solid #ef444455", borderRadius: 9, padding: "10px 13px", fontSize: 13, color: "#ef4444" }}>
               ⚠ {errors.general}
             </div>
           )}
 
-          {/* Name — signup only */}
           {!isLogin && (
             <div>
               <label style={{ fontSize: 12, opacity: 0.6, marginBottom: 5, display: "block" }}>Full Name</label>
               <input
                 type="text" placeholder="Rahul Sharma"
                 value={form.name} onChange={e => set("name", e.target.value)}
-                onFocus={() => setFocused("name")} onBlur={() => setFocused("")}
-                style={{ ...INPUT, ...(focused === "name" ? focusStyle : {}), borderColor: errors.name ? "#ef4444" : undefined }}
+                style={{ ...INPUT, borderColor: errors.name ? "#ef4444" : undefined }}
               />
               {errors.name && <div style={{ fontSize: 11, color: "#ef4444", marginTop: 4 }}>{errors.name}</div>}
             </div>
           )}
 
-          {/* Email */}
           <div>
             <label style={{ fontSize: 12, opacity: 0.6, marginBottom: 5, display: "block" }}>Email</label>
             <input
               type="email" placeholder="you@example.com"
               value={form.email} onChange={e => set("email", e.target.value)}
-              onFocus={() => setFocused("email")} onBlur={() => setFocused("")}
-              style={{ ...INPUT, ...(focused === "email" ? focusStyle : {}), borderColor: errors.email ? "#ef4444" : undefined }}
+              style={{ ...INPUT, borderColor: errors.email ? "#ef4444" : undefined }}
             />
             {errors.email && <div style={{ fontSize: 11, color: "#ef4444", marginTop: 4 }}>{errors.email}</div>}
           </div>
 
-          {/* Password */}
           <div>
             <label style={{ fontSize: 12, opacity: 0.6, marginBottom: 5, display: "block" }}>Password</label>
             <input
               type="password" placeholder="Min 6 characters"
               value={form.password} onChange={e => set("password", e.target.value)}
-              onFocus={() => setFocused("password")} onBlur={() => setFocused("")}
-              style={{ ...INPUT, ...(focused === "password" ? focusStyle : {}), borderColor: errors.password ? "#ef4444" : undefined }}
+              style={{ ...INPUT, borderColor: errors.password ? "#ef4444" : undefined }}
             />
             {errors.password && <div style={{ fontSize: 11, color: "#ef4444", marginTop: 4 }}>{errors.password}</div>}
-
           </div>
 
-          {/* Confirm password — signup only */}
           {!isLogin && (
             <div>
               <label style={{ fontSize: 12, opacity: 0.6, marginBottom: 5, display: "block" }}>Confirm Password</label>
               <input
                 type="password" placeholder="Repeat your password"
                 value={form.confirm} onChange={e => set("confirm", e.target.value)}
-                onFocus={() => setFocused("confirm")} onBlur={() => setFocused("")}
-                style={{ ...INPUT, ...(focused === "confirm" ? focusStyle : {}), borderColor: errors.confirm ? "#ef4444" : undefined }}
+                style={{ ...INPUT, borderColor: errors.confirm ? "#ef4444" : undefined }}
               />
               {errors.confirm && <div style={{ fontSize: 11, color: "#ef4444", marginTop: 4 }}>{errors.confirm}</div>}
             </div>
           )}
 
-          {/* Submit button */}
           <button
             type="submit"
             disabled={loading}
@@ -204,14 +175,11 @@ export default function AuthPage() {
               transform: loading ? "scale(0.98)" : "scale(1)",
             }}
           >
-            {loading
-              ? "Please wait..."
-              : isLogin ? "Log In →" : "Create Account →"}
+            {loading ? "Please wait..." : isLogin ? "Log In →" : "Create Account →"}
           </button>
 
         </form>
 
-        {/* Bottom switch */}
         <p style={{ textAlign: "center", fontSize: 13, opacity: 0.5, marginTop: "1.4rem", marginBottom: 0 }}>
           {isLogin ? "Don't have an account? " : "Already have an account? "}
           <span

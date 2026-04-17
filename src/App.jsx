@@ -9,6 +9,7 @@ import Favour from './frontend/component/Favour'
 import DSATracker from './frontend/component/DSATracker'
 import AuthPage from './frontend/component/AuthPage'
 import { useState } from 'react'
+import Chatbot from './frontend/AiChatbot/chatbot'
 
 function Protected({ children }) {
   const { user } = useAuth();
@@ -34,6 +35,7 @@ function AppInner() {
         <Route path="/tracker" element={<Protected><DSATracker /></Protected>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <Chatbot></Chatbot>
     </ThemeProvider>
   );
 }
