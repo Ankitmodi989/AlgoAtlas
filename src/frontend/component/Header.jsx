@@ -48,9 +48,9 @@ const Header = () => {
             </Link>
           </>
         )}
-
-        <div className="about cursor-pointer hover:text-red-500">About</div>
-
+        <Link to="/about">
+          <div className="about cursor-pointer hover:text-red-500">About</div>
+        </Link>
         <div className="mode cursor-pointer hover:text-red-500">
           {dark
             ? <span onClick={() => setDark(false)}>☀ Light</span>
