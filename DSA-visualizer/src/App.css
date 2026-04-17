@@ -1,0 +1,222 @@
+/* ===== QUIZ STYLES ===== */
+.quiz-box {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  background: var(--card-bg);
+  color: var(--card-text-color);
+  text-align: center;
+}
+
+.quiz-box h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.quiz-box ul {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+  margin: 1rem auto;
+  max-width: 300px;
+}
+
+.quiz-box ul li {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.quiz-btn {
+  background: #2563eb;
+  color: white;
+  padding: 12px 32px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.option-btn {
+  padding: 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  background: var(--card-bg);
+  color: var(--card-text-color);
+  transition: all 0.2s;
+}
+
+.option-btn.correct { background: #22c55e; color: white; }
+.option-btn.wrong   { background: #ef4444; color: white; }
+
+.progress-bar {
+  background: #e2e8f0;
+  border-radius: 999px;
+  height: 8px;
+  margin: 1rem 0;
+}
+
+.progress-bar div {
+  background: #2563eb;
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.3s;
+}
+
+/* ===== ABOUT SECTION ===== */
+.about-section {
+  padding: 5rem 1.5rem;
+  position: relative;
+}
+
+.about-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.about-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.5px;
+}
+
+.about-highlight {
+  background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.about-subtitle {
+  font-size: 1.15rem;
+  color: var(--card-text-color);
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  line-height: 1.7;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.about-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: left;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.about-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 48px rgba(99, 102, 241, 0.15);
+}
+
+.about-card-icon {
+  font-size: 2.2rem;
+  margin-bottom: 0.75rem;
+}
+
+.about-card h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  color: var(--primary-color);
+}
+
+.about-card p {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--card-text-color);
+  opacity: 0.85;
+}
+
+.about-features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.about-features-list li {
+  padding: 0.4rem 0;
+  font-size: 0.95rem;
+  color: var(--card-text-color);
+  opacity: 0.85;
+  position: relative;
+  padding-left: 1.4rem;
+}
+
+.about-features-list li::before {
+  content: '✦';
+  position: absolute;
+  left: 0;
+  color: #a855f7;
+  font-size: 0.75rem;
+  top: 0.55rem;
+}
+
+.about-tech {
+  margin-top: 1rem;
+}
+
+.about-tech h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+
+.tech-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.tech-badge {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.15));
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: var(--primary-color);
+  padding: 0.5rem 1.25rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.tech-badge:hover {
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+  .about-title {
+    font-size: 2rem;
+  }
+}

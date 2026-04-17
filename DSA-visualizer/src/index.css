@@ -1,0 +1,35 @@
+@import "tailwindcss";
+/* :root{
+     --background-image: url('./assets\pexels-codioful-7130872 (1).jpg');
+     --primary-color: black;
+     --navbar-bg: rgba(255, 255, 255, 0.8);
+     --navbar-color:black;
+} */
+[data-theme="light"]{
+    --background-image: url('./assets\pexels-codioful-7130872 (1).jpg');
+    --primary-color: black;
+    --navbar-bg: rgba(255, 255, 255, 0.8);
+    --navbar-color:black;
+    --serchbar-bg: rgba(215, 204, 204, 0.8);
+    --serchbar-color: black;
+    --card-bg: rgba(255, 255, 255, 0.8);
+    --card-text-color: rgb(37, 32, 32);
+}
+[data-theme="dark"]{
+    --background-image: url('./assets/opoy7.jpg');
+    --primary-color: white;
+    --navbar-bg: rgb(21, 13, 22);
+    --navbar-color: white;
+    --serchbar-bg: rgb(21, 13, 22);
+    --serchbar-color: white;
+    --card-bg: #1e2939 ;
+    --card-text-color :rgb(207, 196, 196);
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    background-image: var(--background-image);
+    background-size: cover;
+    color: var(--primary-color);
+}

@@ -1,0 +1,29 @@
+.sidebar {
+    width: 200px;
+    min-width: 200px;
+    background: var(--navbar-bg);
+    border-color: var(--sidebar-border, rgba(255, 255, 255, 0.08));
+}
+
+.sidebar__label {
+    color: var(--card-text-color);
+    opacity: 0.45;
+}
+
+.sidebar__btn {
+    background: transparent;
+    color: var(--card-text-color);
+    opacity: 0.65;
+    border: 1px solid transparent;
+}
+
+.sidebar__btn--active {
+    background: var(--sidebar-active-bg, rgba(255, 255, 255, 0.12));
+    color: var(--card-text-color);
+    opacity: 1;
+    border: 1px solid var(--sidebar-active-border, rgba(255, 255, 255, 0.18));
+}
+
+.sidebar__icon {
+    font-size: 16px;
+}
