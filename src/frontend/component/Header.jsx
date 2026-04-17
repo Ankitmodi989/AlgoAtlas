@@ -40,6 +40,9 @@ const Header = () => {
 
         {user && (
           <>
+            <Link to="/">
+              <div className="cursor-pointer hover:text-red-500">Home</div>
+            </Link>
             <Link to="/favour">
               <div className="cursor-pointer hover:text-red-500">Wishlist</div>
             </Link>
@@ -48,9 +51,9 @@ const Header = () => {
             </Link>
           </>
         )}
-
-        <div className="about cursor-pointer hover:text-red-500">About</div>
-
+        <Link to="/about">
+          <div className="about cursor-pointer hover:text-red-500">About</div>
+        </Link>
         <div className="mode cursor-pointer hover:text-red-500">
           {dark
             ? <span onClick={() => setDark(false)}>☀ Light</span>

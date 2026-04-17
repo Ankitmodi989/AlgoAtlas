@@ -1,0 +1,65 @@
+.about-page-container {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.about-card {
+  width: 100%;
+  max-width: 600px;
+  background: var(--card-bg, rgba(255, 255, 255, 0.05));
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+  color: var(--primary-color, #fff);
+  line-height: 1.6;
+}
+
+.about-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.about-logo-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+  font-size: 24px;
+}
+
+.about-title {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0;
+  color: var(--primary-color);
+}
+
+.about-content p {
+  margin-bottom: 1rem;
+  font-size: 15px;
+  opacity: 0.9;
+}
+
+.about-content ul {
+  padding-left: 20px;
+  margin-bottom: 1.5rem;
+}
+
+.about-content li {
+  margin-bottom: 0.5rem;
+  font-size: 15px;
+  opacity: 0.9;
+}
+
+.about-content strong {
+  color: #6366f1;
+}
