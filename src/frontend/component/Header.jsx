@@ -40,6 +40,9 @@ const Header = () => {
 
         {user && (
           <>
+            <Link to="/">
+              <div className="cursor-pointer hover:text-red-500">Home</div>
+            </Link>
             <Link to="/favour">
               <div className="cursor-pointer hover:text-red-500">Wishlist</div>
             </Link>
