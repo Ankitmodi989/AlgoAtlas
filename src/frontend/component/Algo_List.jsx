@@ -45,6 +45,8 @@ export const sortingAlgorithms = [
         isFavorite: false,
         image: bubbleImg,
         color: "#f59e0b",
+        youtubeLink: "https://www.youtube.com/watch?v=xli_FI7CuzA",
+        docsLink: "https://www.geeksforgeeks.org/bubble-sort/",
     },
     {
         id: "insertion",
@@ -61,6 +63,8 @@ export const sortingAlgorithms = [
         isFavorite: false,
         image: insertionImg,
         color: "#10b981",
+        youtubeLink: "https://www.youtube.com/watch?v=JU767SDMDvA",
+        docsLink: "https://www.geeksforgeeks.org/insertion-sort/",
     },
     {
         id: "selection",
@@ -77,6 +81,8 @@ export const sortingAlgorithms = [
         isFavorite: false,
         image: selectionImg,
         color: "#3b82f6",
+        youtubeLink: "https://www.youtube.com/watch?v=g-PGLbMth_g",
+        docsLink: "https://www.geeksforgeeks.org/selection-sort/",
     },
     {
         id: "merge",
@@ -93,6 +99,8 @@ export const sortingAlgorithms = [
         isFavorite: false,
         image: mergeImg,
         color: "#8b5cf6",
+        youtubeLink: "https://www.youtube.com/watch?v=4VqmGXwpLqc",
+        docsLink: "https://www.geeksforgeeks.org/merge-sort/",
     },
     {
         id: "quick",
@@ -109,6 +117,8 @@ export const sortingAlgorithms = [
         isFavorite: false,
         image: quickImg,
         color: "#ef4444",
+        youtubeLink: "https://www.youtube.com/watch?v=Hoixgm4-P4M",
+        docsLink: "https://www.geeksforgeeks.org/quick-sort/",
     },
     {
         id: "counting",
@@ -125,6 +135,8 @@ export const sortingAlgorithms = [
         isFavorite: false,
         image: countingImg,
         color: "#14b8a6",
+        youtubeLink: "https://www.youtube.com/watch?v=7zuGmKfUt7s",
+        docsLink: "https://www.geeksforgeeks.org/counting-sort/",
     },
     {
         id: "heap",
@@ -141,6 +153,8 @@ export const sortingAlgorithms = [
         isFavorite: false,
         image: heapImg,
         color: "#6366f1",
+        youtubeLink: "https://www.youtube.com/watch?v=2DmK_H7IdTo",
+        docsLink: "https://www.geeksforgeeks.org/heap-sort/",
     },
 ];
 
@@ -161,6 +175,8 @@ export const searchingAlgorithms = [
         isFavorite: false,
         image: linearSearchImg,
         color: "#f59e0b",
+        youtubeLink: "https://www.youtube.com/watch?v=246V51AWwZM",
+        docsLink: "https://www.geeksforgeeks.org/linear-search/",
     },
     {
         id: "binary-search",
@@ -177,6 +193,8 @@ export const searchingAlgorithms = [
         isFavorite: false,
         image: binarySearchImg,
         color: "#3b82f6",
+        youtubeLink: "https://www.youtube.com/watch?v=P3YID7liBug",
+        docsLink: "https://www.geeksforgeeks.org/binary-search/",
     },
     {
         id: "jump-search",
@@ -193,6 +211,8 @@ export const searchingAlgorithms = [
         isFavorite: false,
         image: jumpSearchImg,
         color: "#10b981",
+        youtubeLink: "https://www.youtube.com/watch?v=63kS6ZkMpkA",
+        docsLink: "https://www.geeksforgeeks.org/jump-search/",
     },
     {
         id: "interpolation-search",
@@ -209,6 +229,8 @@ export const searchingAlgorithms = [
         isFavorite: false,
         image: interpolationSearchImg,
         color: "#8b5cf6",
+        youtubeLink: "https://www.youtube.com/watch?v=DpB3I5eCDJY",
+        docsLink: "https://www.geeksforgeeks.org/interpolation-search/",
     },
     {
         id: "exponential-search",
@@ -225,6 +247,8 @@ export const searchingAlgorithms = [
         isFavorite: false,
         image: exponentialSearchImg,
         color: "#ef4444",
+        youtubeLink: "https://www.youtube.com/watch?v=BDVYtuWXgXE",
+        docsLink: "https://www.geeksforgeeks.org/exponential-search/",
     },
 ];
 
@@ -245,6 +269,8 @@ export const graphAlgorithms = [
         isFavorite: false,
         image: bfsImg,
         color: "#3b82f6",
+        youtubeLink: "https://www.youtube.com/watch?v=-tgVpUgsQ5k",
+        docsLink: "https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/",
     },
     {
         id: "dfs",
@@ -261,6 +287,8 @@ export const graphAlgorithms = [
         isFavorite: false,
         image: dfsImg,
         color: "#10b981",
+        youtubeLink: "https://www.youtube.com/watch?v=Urx87-NMm6c",
+        docsLink: "https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/",
     },
     {
         id: "dijkstra",
@@ -277,6 +305,8 @@ export const graphAlgorithms = [
         isFavorite: false,
         image: dijkstraImg,
         color: "#f59e0b",
+        youtubeLink: "https://www.youtube.com/watch?v=GazC3A4OQTE",
+        docsLink: "https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/",
     },
     {
         id: "bellman-ford",
@@ -293,6 +323,8 @@ export const graphAlgorithms = [
         isFavorite: false,
         image: bellmanFordImg,
         color: "#ef4444",
+        youtubeLink: "https://www.youtube.com/watch?v=FtN3BYH2Zes",
+        docsLink: "https://www.geeksforgeeks.org/bellman-ford-algorithm-dp-23/",
     },
     {
         id: "kruskal",
@@ -309,6 +341,8 @@ export const graphAlgorithms = [
         isFavorite: false,
         image: kruskalImg,
         color: "#8b5cf6",
+        youtubeLink: "https://www.youtube.com/watch?v=4ZlRH0eK-qQ",
+        docsLink: "https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/",
     },
     {
         id: "prim",
@@ -325,6 +359,8 @@ export const graphAlgorithms = [
         isFavorite: false,
         image: primImg,
         color: "#14b8a6",
+        youtubeLink: "https://www.youtube.com/watch?v=oP2-8ysT3QQ",
+        docsLink: "https://www.geeksforgeeks.org/prims-minimum-spanning-tree-mst-greedy-algo-5/",
     },
 ];
 
@@ -344,6 +380,8 @@ export const dpAlgorithms = [
         isFavorite: false,
         image: fibonacciDpImg,
         color: "#10b981",
+        youtubeLink: "https://www.youtube.com/watch?v=tyB0ztf0DNY",
+        docsLink: "https://www.geeksforgeeks.org/program-for-nth-fibonacci-number/",
     },
     {
         id: "knapsack",
@@ -360,6 +398,8 @@ export const dpAlgorithms = [
         isFavorite: false,
         image: knapsackImg,
         color: "#f59e0b",
+        youtubeLink: "https://www.youtube.com/watch?v=8LusJS5-AGo",
+        docsLink: "https://www.geeksforgeeks.org/0-1-knapsack-problem-dp-10/",
     },
     {
         id: "lcs",
@@ -376,6 +416,8 @@ export const dpAlgorithms = [
         isFavorite: false,
         image: lcsImg,
         color: "#8b5cf6",
+        youtubeLink: "https://www.youtube.com/watch?v=sSno9rV8Rhg",
+        docsLink: "https://www.geeksforgeeks.org/longest-common-subsequence-dp-4/",
     },
     {
         id: "lis",
@@ -392,6 +434,8 @@ export const dpAlgorithms = [
         isFavorite: false,
         image: lisImg,
         color: "#3b82f6",
+        youtubeLink: "https://www.youtube.com/watch?v=22s1xxRvy28",
+        docsLink: "https://www.geeksforgeeks.org/longest-increasing-subsequence-dp-3/",
     },
     {
         id: "coin-change",
@@ -408,6 +452,8 @@ export const dpAlgorithms = [
         isFavorite: false,
         image: coinChangeImg,
         color: "#ef4444",
+        youtubeLink: "https://www.youtube.com/watch?v=H9bfqozjoqs",
+        docsLink: "https://www.geeksforgeeks.org/coin-change-dp-7/",
     },
     {
         id: "edit-distance",
@@ -424,6 +470,8 @@ export const dpAlgorithms = [
         isFavorite: false,
         image: editDistanceImg,
         color: "#14b8a6",
+        youtubeLink: "https://www.youtube.com/watch?v=We3YDTzNXEk",
+        docsLink: "https://www.geeksforgeeks.org/edit-distance-dp-5/",
     },
 ];
 
@@ -443,6 +491,8 @@ export const treeAlgorithms = [
         isFavorite: false,
         image: inorderImg,
         color: "#10b981",
+        youtubeLink: "https://www.youtube.com/watch?v=5dySuyZf9Qg",
+        docsLink: "https://www.geeksforgeeks.org/inorder-traversal-of-binary-tree/",
     },
     {
         id: "preorder",
@@ -459,6 +509,8 @@ export const treeAlgorithms = [
         isFavorite: false,
         image: preorderImg,
         color: "#f59e0b",
+        youtubeLink: "https://www.youtube.com/watch?v=RlUu72JrOCQ",
+        docsLink: "https://www.geeksforgeeks.org/preorder-traversal-of-binary-tree/",
     },
     {
         id: "postorder",
@@ -475,6 +527,8 @@ export const treeAlgorithms = [
         isFavorite: false,
         image: postorderImg,
         color: "#3b82f6",
+        youtubeLink: "https://www.youtube.com/watch?v=COQOU6klsBg",
+        docsLink: "https://www.geeksforgeeks.org/postorder-traversal-of-binary-tree/",
     },
     {
         id: "bst-insert",
@@ -491,6 +545,8 @@ export const treeAlgorithms = [
         isFavorite: false,
         image: bstInsertImg,
         color: "#8b5cf6",
+        youtubeLink: "https://www.youtube.com/watch?v=wcIRPqTR3Kc",
+        docsLink: "https://www.geeksforgeeks.org/insertion-in-binary-search-tree/",
     },
     {
         id: "avl-tree",
@@ -507,6 +563,8 @@ export const treeAlgorithms = [
         isFavorite: false,
         image: avlTreeImg,
         color: "#ef4444",
+        youtubeLink: "https://www.youtube.com/watch?v=jDM6_TnYIqE",
+        docsLink: "https://www.geeksforgeeks.org/introduction-to-avl-tree/",
     },
 ];
 
