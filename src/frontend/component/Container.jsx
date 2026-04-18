@@ -42,7 +42,7 @@ const Container = ({ ele, favour, toggleFavour }) => {
                     className="flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-medium hover:opacity-80"
                     style={{ backgroundColor: ele.youtubeLink ? '#dc2626' : '#374151', color: '#fff', opacity: ele.youtubeLink ? 1 : 0.5, cursor: ele.youtubeLink ? 'pointer' : 'not-allowed' }}
                 >
-                    <PlayCircle size={13} /> YouTube
+                    <PlayCircle size={13} /> 
                 </button>
                 <button
                     onClick={(e) => handleLink(e, ele.docsLink)}
@@ -50,7 +50,7 @@ const Container = ({ ele, favour, toggleFavour }) => {
                     className="flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-medium hover:opacity-80"
                     style={{ backgroundColor: ele.docsLink ? '#2f8d46' : '#374151', color: '#fff', opacity: ele.docsLink ? 1 : 0.5, cursor: ele.docsLink ? 'pointer' : 'not-allowed' }}
                 >
-                    <BookOpen size={13} /> GFG
+                    <BookOpen size={13} /> 
                 </button>
             </div>
 
