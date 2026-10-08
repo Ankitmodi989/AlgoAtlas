@@ -19,7 +19,6 @@ const Sidebar = ({ activeCategory, setActiveCategory }) => {
                 <span className="sidebar__icon">⊕</span>
                 <span>All</span>
             </button>
-
             {/* Category buttons */}
             {allCategories.map((cat) => (
                 <button

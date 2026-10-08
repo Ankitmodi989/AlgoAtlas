@@ -9,7 +9,7 @@ import Favour from './frontend/component/Favour'
 import DSATracker from './frontend/component/DSATracker'
 import AuthPage from './frontend/component/AuthPage'
 import AboutPage from './frontend/component/AboutPage'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Chatbot from './frontend/AiChatbot/Chatbot'
 
 function Protected({ children }) {
@@ -18,17 +18,25 @@ function Protected({ children }) {
 }
 
 function AppInner() {
-  const [favour, setFavour] = useState([]);
+  const [favour, setFavour] = useState(() => {
+    const saved = localStorage.getItem('favour');
+    return saved ? JSON.parse(saved) : [];
+  });
+  useEffect(() => {
+    localStorage.setItem('favour', JSON.stringify(favour));
+  }, [favour]);
+
   const toggleFavour = (algo) => {
     const exists = favour.find(item => item.id === algo.id);
     setFavour(exists ? favour.filter(item => item.id !== algo.id) : [...favour, algo]);
   };
 
+
   return (
     <ThemeProvider>
       <Header />
       <Routes>
-        <Route path="/login"  element={<AuthPage />} />
+        <Route path="/login" element={<AuthPage />} />
         <Route path="/signup" element={<AuthPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/" element={<Protected><Content favour={favour} toggleFavour={toggleFavour} /></Protected>} />
