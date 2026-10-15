@@ -42,40 +42,37 @@ const Content = ({ favour, toggleFavour }) => {
             />
 
             {/* ── Main content ────────────────────────────────────── */}
-            <div
-                className="flex-1 w-full"
-                style={{
-                    backgroundImage: 'var(--background-image)',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                }}
-            >
+            <div className="flex-1 w-full">
                 {/* Hero / Search section */}
-                <div className="flex flex-col items-center justify-center pt-20 pb-10 text-center px-4">
-                    <h1 className="text-6xl font-bold">AlgoAtlas</h1>
+                <div className="flex flex-col items-center justify-center pt-16 pb-8 text-center px-4">
+                    <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                        AlgoAtlas
+                    </h1>
 
-                    <p className="text-lg text-gray-400 mt-4 max-w-2xl">
+                    <p className="text-base md:text-lg opacity-75 mt-3 max-w-2xl px-2">
                         A comprehensive platform for exploring algorithms, offering structured
                         explanations, practice resources, and essential learning tools in one place.
                     </p>
 
                     {/* Search Bar */}
                     <div
-                        onClick={() => inputRef.current.focus()}
-                        className="flex items-center border backdrop-blur-md rounded-2xl mt-10 p-3 w-80 bg-white/10 shadow-lg"
-                        style={{ borderColor: 'var(--serchbar-bg)' }}
+                        onClick={() => inputRef.current?.focus()}
+                        className="flex items-center border backdrop-blur-md rounded-2xl mt-8 p-3 w-80 md:w-96 shadow-lg transition-all focus-within:ring-2 focus-within:ring-indigo-500"
+                        style={{
+                            backgroundColor: 'var(--serchbar-bg)',
+                            borderColor: 'rgba(255, 255, 255, 0.15)',
+                        }}
                     >
                         <input
                             ref={inputRef}
                             type="text"
-                            placeholder="Search Algorithm"
+                            placeholder="Search Algorithm..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="outline-none flex-1 px-2 bg-transparent"
+                            className="outline-none flex-1 px-2 bg-transparent text-sm md:text-base placeholder:opacity-60"
                             style={{ color: 'var(--serchbar-color)' }}
                         />
-                        <Search className="text-white" />
+                        <Search size={18} style={{ color: 'var(--serchbar-color)', opacity: 0.7 }} />
                     </div>
                 </div>
 

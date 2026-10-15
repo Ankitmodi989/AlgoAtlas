@@ -1,35 +1,48 @@
 @import "tailwindcss";
-/* :root{
-     --background-image: url('./assets\pexels-codioful-7130872 (1).jpg');
-     --primary-color: black;
-     --navbar-bg: rgba(255, 255, 255, 0.8);
-     --navbar-color:black;
-} */
-[data-theme="light"]{
-    --background-image: url('./assets\pexels-codioful-7130872 (1).jpg');
-    --primary-color: black;
-    --navbar-bg: rgba(255, 255, 255, 0.8);
-    --navbar-color:black;
-    --serchbar-bg: rgba(215, 204, 204, 0.8);
-    --serchbar-color: black;
-    --card-bg: rgba(255, 255, 255, 0.8);
-    --card-text-color: rgb(37, 32, 32);
-}
-[data-theme="dark"]{
+
+:root {
     --background-image: url('./assets/opoy7.jpg');
-    --primary-color: white;
-    --navbar-bg: rgb(21, 13, 22);
-    --navbar-color: white;
-    --serchbar-bg: rgb(21, 13, 22);
-    --serchbar-color: white;
-    --card-bg: #1e2939 ;
-    --card-text-color :rgb(207, 196, 196);
+    --primary-color: #ffffff;
+    --navbar-bg: rgba(18, 14, 28, 0.85);
+    --navbar-color: #ffffff;
+    --serchbar-bg: rgba(255, 255, 255, 0.12);
+    --serchbar-color: #ffffff;
+    --card-bg: rgba(30, 41, 57, 0.85);
+    --card-text-color: rgb(226, 232, 240);
 }
 
-body{
+[data-theme="light"] {
+    --background-image: url('./assets/pexels-codioful-7130872 (1).jpg');
+    --primary-color: #111827;
+    --navbar-bg: rgba(255, 255, 255, 0.88);
+    --navbar-color: #111827;
+    --serchbar-bg: rgba(0, 0, 0, 0.08);
+    --serchbar-color: #111827;
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --card-text-color: rgb(31, 41, 55);
+}
+
+[data-theme="dark"] {
+    --background-image: url('./assets/opoy7.jpg');
+    --primary-color: #ffffff;
+    --navbar-bg: rgba(18, 14, 28, 0.85);
+    --navbar-color: #ffffff;
+    --serchbar-bg: rgba(255, 255, 255, 0.12);
+    --serchbar-color: #ffffff;
+    --card-bg: rgba(30, 41, 57, 0.85);
+    --card-text-color: rgb(226, 232, 240);
+}
+
+body {
     margin: 0;
     padding: 0;
+    min-height: 100vh;
     background-image: var(--background-image);
     background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
     color: var(--primary-color);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
+

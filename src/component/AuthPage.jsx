@@ -1,15 +1,19 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import "./AuthPage.css";
 
 export default function AuthPage() {
-  const [mode, setMode] = useState("login");
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isSignupRoute = location.pathname === "/signup";
+  const [activeTab, setActiveTab] = useState(null);
+  const mode = activeTab ?? (isSignupRoute ? "signup" : "login");
+
   const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const { login, signup } = useAuth();
-  const navigate = useNavigate();
 
   function set(key, val) {
     setForm(f => ({ ...f, [key]: val }));
@@ -42,9 +46,10 @@ export default function AuthPage() {
   }
 
   function switchMode(m) {
-    setMode(m);
+    setActiveTab(m);
     setForm({ name: "", email: "", password: "", confirm: "" });
     setErrors({});
+    navigate(m === "signup" ? "/signup" : "/login", { replace: true });
   }
 
   const isLogin = mode === "login";

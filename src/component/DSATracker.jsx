@@ -45,7 +45,11 @@ export default function DSATracker() {
   const [revisionDone, setRevisionDone] = useState(false);
 
   useEffect(() => {
-    try { localStorage.setItem("dsa_tasks", JSON.stringify(tasks)); } catch {}
+    try {
+      localStorage.setItem("dsa_tasks", JSON.stringify(tasks));
+    } catch (err) {
+      console.warn("Could not save tasks to localStorage:", err);
+    }
   }, [tasks]);
 
   function openAdd() {

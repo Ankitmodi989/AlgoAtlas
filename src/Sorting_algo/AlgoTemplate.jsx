@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 
 // ─── Sorting visualizer step builder ─────────────────────────────────────────
 function randArr(n = 8) {
@@ -123,8 +123,17 @@ const SPEEDS = [900, 600, 380, 200, 80];
 
 // ─── Main Template ────────────────────────────────────────────────────────────
 export default function AlgoTemplate({ data }) {
-  if (!data) return <div style={{ padding: "3rem", color: "var(--card-text-color)" }}>Algorithm not found.</div>;
+  if (!data) {
+    return (
+      <div style={{ padding: "3rem", color: "var(--card-text-color)", textAlign: "center" }}>
+        Algorithm not found.
+      </div>
+    );
+  }
+  return <AlgoTemplateContent data={data} />;
+}
 
+function AlgoTemplateContent({ data }) {
   const { id, title, category, color, tags, tagColors = {}, shortDesc, whatIs,
     howItWorks, steps, complexity, pros, cons, whenToUse, quiz: quizData, code } = data;
 
@@ -132,7 +141,10 @@ export default function AlgoTemplate({ data }) {
 
   // ── visualizer state ───────────────────────────────────────────────────────
   const [inputVal, setInputVal] = useState("64, 25, 12, 22, 11, 90, 38");
-  const [vizSteps, setVizSteps] = useState([]);
+  const [vizSteps, setVizSteps] = useState(() => {
+    if (!isSorting) return [];
+    return buildSortSteps(id, [64, 25, 12, 22, 11, 90, 38]);
+  });
   const [stepIdx, setStepIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [speed, setSpeed] = useState(2);
@@ -160,18 +172,20 @@ export default function AlgoTemplate({ data }) {
   }
 
   useEffect(() => {
-    if (!playing || stepIdx >= vizSteps.length - 1) { setPlaying(false); return; }
+    if (!playing || stepIdx >= vizSteps.length - 1) return;
     timerRef.current = setTimeout(() => {
       setStepIdx(prev => {
         const next = prev + 1;
         const s = vizSteps[next];
         if (s?.swapped) setSwaps(sw => sw + 1);
         else if (!s?.done) setComparisons(c => c + 1);
+        if (next >= vizSteps.length - 1) setPlaying(false);
         return next;
       });
     }, SPEEDS[speed - 1]);
     return () => clearTimeout(timerRef.current);
   }, [playing, stepIdx, vizSteps, speed]);
+
 
   function stepFwd() {
     if (stepIdx >= vizSteps.length - 1) return;
