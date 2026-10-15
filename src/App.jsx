@@ -31,7 +31,6 @@ function AppInner() {
       <Routes>
         <Route path="/login"  element={<AuthPage />} />
         <Route path="/signup" element={<AuthPage />} />
-        <Route path="/about" element={<AboutPage />} />
         <Route path="/" element={<Protected><Content favour={favour} toggleFavour={toggleFavour} /></Protected>} />
         <Route path="/favour" element={<Protected><Favour favour={favour} toggleFavour={toggleFavour} /></Protected>} />
         <Route path="/algo/:id" element={<Protected><Algo_page /></Protected>} />
