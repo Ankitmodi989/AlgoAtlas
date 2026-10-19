@@ -57,6 +57,20 @@ const UserSchema = new mongoose.Schema({
 
         },
         select: false
+    },
+    role: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user'
+    },
+    handles: {
+        leetcode: { type: String, default: '' },
+        codeforces: { type: String, default: '' },
+        codechef: { type: String, default: '' }
+    },
+    platformData: {
+        type: Object,
+        default: null
     }
 },
     {

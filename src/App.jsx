@@ -8,6 +8,7 @@ import Favour from './component/Favour'
 import DSATracker from './component/DSATracker'
 import AuthPage from './component/AuthPage'
 import AboutPage from './component/AboutPage'
+import AnalysisPage from './component/AnalysisPage'
 import { ThemeProvider } from './component/ThemeProvider'
 import { useState } from 'react'
 import Chatbot from './AiChatbot/Chatbot'
@@ -44,6 +45,8 @@ function AppInner() {
         <Route path="/favour" element={<Protected><Favour favour={favour} toggleFavour={toggleFavour} /></Protected>} />
         <Route path="/algo/:id" element={<Protected><Algo_page /></Protected>} />
         <Route path="/tracker" element={<Protected><DSATracker /></Protected>} />
+        <Route path="/analysis" element={<Protected><AnalysisPage /></Protected>} />
+        <Route path="/about" element={<AboutPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <Chatbot></Chatbot>

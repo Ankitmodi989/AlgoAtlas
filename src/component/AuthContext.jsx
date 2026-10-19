@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, []);
 
-  const signup = async (name, email, password) => {
+  const signup = async (name, email, password, handles = {}) => {
     try {
       const res = await fetch("http://localhost:8000/api/auth/signup", {
         method: "POST",
@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, handles }),
       });
       const data = await res.json();
 
@@ -102,8 +102,30 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateProfile = async ({ handles, platformData }) => {
+    try {
+      const res = await fetch("http://localhost:8000/api/auth/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ handles, platformData }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        return { ok: false, error: data.message || "Failed to update profile" };
+      }
+      if (data.user) {
+        setUser(data.user);
+      }
+      return { ok: true, user: data.user };
+    } catch (error) {
+      console.error("Update profile error:", error);
+      return { ok: false, error: "Network error" };
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, signup, logout, updateProfile, setUser }}>
       {children}
     </AuthContext.Provider>
   );

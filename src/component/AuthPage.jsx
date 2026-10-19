@@ -3,6 +3,44 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import "./AuthPage.css";
 
+// Extract clean username/handle from profile URL or raw username
+export function parsePlatformHandle(platform, input) {
+  if (!input) return "";
+  const trimmed = input.trim();
+  if (!trimmed) return "";
+
+  try {
+    if (trimmed.startsWith("http://") || trimmed.startsWith("https://") || trimmed.includes(".com/")) {
+      const urlStr = trimmed.startsWith("http") ? trimmed : `https://${trimmed}`;
+      const url = new URL(urlStr);
+      const segments = url.pathname.split("/").filter(Boolean);
+
+      if (platform === "leetcode") {
+        if (segments[0] === "u" && segments[1]) return segments[1];
+        if (segments[0] && segments[0] !== "problemset" && segments[0] !== "contest") return segments[0];
+      }
+
+      if (platform === "codeforces") {
+        if (segments[0] === "profile" && segments[1]) return segments[1];
+        if (segments[0]) return segments[0];
+      }
+
+      if (platform === "codechef") {
+        if (segments[0] === "users" && segments[1]) return segments[1];
+        if (segments[0]) return segments[0];
+      }
+
+      if (segments.length > 0) {
+        return segments[segments.length - 1];
+      }
+    }
+  } catch {
+    // fallback if not a strict URL
+  }
+
+  return trimmed.replace(/^[@/]+/, "").replace(/\/+$/, "").trim();
+}
+
 export default function AuthPage() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -10,7 +48,15 @@ export default function AuthPage() {
   const [activeTab, setActiveTab] = useState(null);
   const mode = activeTab ?? (isSignupRoute ? "signup" : "login");
 
-  const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirm: "",
+    leetcodeUrl: "",
+    codeforcesUrl: "",
+    codechefUrl: ""
+  });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const { user, login, signup } = useAuth();
@@ -42,10 +88,16 @@ export default function AuthPage() {
     const errs = validate();
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setLoading(true);
-    await new Promise(r => setTimeout(r, 500));
-    const result =await( mode === "login"
+
+    const handles = {
+      leetcode: parsePlatformHandle("leetcode", form.leetcodeUrl),
+      codeforces: parsePlatformHandle("codeforces", form.codeforcesUrl),
+      codechef: parsePlatformHandle("codechef", form.codechefUrl)
+    };
+
+    const result = await (mode === "login"
       ? login(form.email, form.password)
-      : signup(form.name, form.email, form.password));
+      : signup(form.name, form.email, form.password, handles));
     setLoading(false);
     if (result.ok) navigate("/");
     else setErrors({ general: result.error });
@@ -53,24 +105,37 @@ export default function AuthPage() {
 
   function switchMode(m) {
     setActiveTab(m);
-    setForm({ name: "", email: "", password: "", confirm: "" });
+    setForm({
+      name: "",
+      email: "",
+      password: "",
+      confirm: "",
+      leetcodeUrl: "",
+      codeforcesUrl: "",
+      codechefUrl: ""
+    });
     setErrors({});
     navigate(m === "signup" ? "/signup" : "/login", { replace: true });
   }
 
   const isLogin = mode === "login";
 
+  // Real-time extracted IDs for visual feedback
+  const parsedLC = parsePlatformHandle("leetcode", form.leetcodeUrl);
+  const parsedCF = parsePlatformHandle("codeforces", form.codeforcesUrl);
+  const parsedCC = parsePlatformHandle("codechef", form.codechefUrl);
+
   return (
     <div className="auth-page-container">
       {/* ── Card ── */}
-      <div className="auth-card">
+      <div className={`auth-card ${!isLogin ? 'signup-mode' : ''}`}>
 
         {/* Logo + brand */}
         <div className="auth-header">
           <div className="auth-logo-icon">⚡</div>
           <h1 className="auth-title">AlgoAtlas</h1>
           <p className="auth-subtitle">
-            {isLogin ? "Welcome back! Sign in to continue." : "Create your free account."}
+            {isLogin ? "Welcome back! Sign in to continue." : "Create your account & sync coding stats."}
           </p>
         </div>
 
@@ -136,12 +201,78 @@ export default function AuthPage() {
             </div>
           )}
 
+          {/* ── Coding Profile URLs Section for Signup ── */}
+          {!isLogin && (
+            <>
+              <div className="auth-section-divider">
+                <span>Coding Profiles (For Real Data)</span>
+              </div>
+
+              <div>
+                <label className="auth-input-label" style={{ color: "#ffa116" }}>
+                  🟡 LeetCode Profile URL or Username
+                </label>
+                <input
+                  type="text"
+                  placeholder="https://leetcode.com/u/your_id or your_id"
+                  value={form.leetcodeUrl}
+                  onChange={e => set("leetcodeUrl", e.target.value)}
+                  className="auth-input"
+                />
+                {parsedLC && (
+                  <div className="auth-detected-badge">
+                    ✓ ID picked: @{parsedLC}
+                  </div>
+                )}
+                <span className="auth-input-helper">
+                  Paste your LeetCode profile URL — we will extract your ID & fetch your real stats.
+                </span>
+              </div>
+
+              <div>
+                <label className="auth-input-label" style={{ color: "#60a5fa" }}>
+                  🔵 Codeforces Profile URL or Handle (Optional)
+                </label>
+                <input
+                  type="text"
+                  placeholder="https://codeforces.com/profile/your_id or your_id"
+                  value={form.codeforcesUrl}
+                  onChange={e => set("codeforcesUrl", e.target.value)}
+                  className="auth-input"
+                />
+                {parsedCF && (
+                  <div className="auth-detected-badge">
+                    ✓ ID picked: @{parsedCF}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="auth-input-label" style={{ color: "#fbbf24" }}>
+                  🟤 CodeChef Profile URL or Handle (Optional)
+                </label>
+                <input
+                  type="text"
+                  placeholder="https://www.codechef.com/users/your_id or your_id"
+                  value={form.codechefUrl}
+                  onChange={e => set("codechefUrl", e.target.value)}
+                  className="auth-input"
+                />
+                {parsedCC && (
+                  <div className="auth-detected-badge">
+                    ✓ ID picked: @{parsedCC}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+
           <button
             type="submit"
             disabled={loading}
             className="auth-submit-btn"
           >
-            {loading ? "Please wait..." : isLogin ? "Log In →" : "Create Account →"}
+            {loading ? "Please wait..." : isLogin ? "Log In →" : "Create Account & Sync Stats →"}
           </button>
 
         </form>

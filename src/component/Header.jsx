@@ -49,6 +49,9 @@ const Header = () => {
             <Link to="/tracker">
               <div className="cursor-pointer hover:text-blue-400">📋 Tracker</div>
             </Link>
+            <Link to="/analysis">
+              <div className="cursor-pointer hover:text-indigo-400">📊 Analysis</div>
+            </Link>
           </>
         )}
         <Link to="/about">
@@ -122,6 +125,7 @@ const Header = () => {
                   { label: "🏠 Home", to: "/" },
                   { label: "❤ Wishlist", to: "/favour" },
                   { label: "📋 Tracker", to: "/tracker" },
+                  { label: "📊 Analysis", to: "/analysis" },
                 ].map(item => (
                   <Link key={item.to} to={item.to} onClick={() => setDropOpen(false)}>
                     <div style={{
