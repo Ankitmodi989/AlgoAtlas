@@ -6,7 +6,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch current logged-in user from backend database on app load
+  // Fetch current logged-in user from backend database or local fallback on app load
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -18,11 +18,22 @@ export const AuthProvider = ({ children }) => {
 
         if (res.ok && data.user) {
           setUser(data.user);
+          setLoading(false);
+          return;
+        }
+      } catch (error) {
+        console.warn("Backend auth check unavailable (server might be offline):", error.message);
+      }
+
+      // Fallback: check localStorage for saved guest or offline session
+      try {
+        const saved = localStorage.getItem("algoatlas_user");
+        if (saved) {
+          setUser(JSON.parse(saved));
         } else {
           setUser(null);
         }
-      } catch (error) {
-        console.error("Auth check failed:", error);
+      } catch {
         setUser(null);
       } finally {
         setLoading(false);
@@ -32,7 +43,7 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, []);
 
-  const signup = async (name, email, password, handles = {}) => {
+  const signup = async (name, email, password) => {
     try {
       const res = await fetch("http://localhost:8000/api/auth/signup", {
         method: "POST",
@@ -53,7 +64,10 @@ export const AuthProvider = ({ children }) => {
       return { ok: true, user: userData };
     } catch (error) {
       console.error("Signup Error:", error);
-      return { ok: false, error: "Network error or server unreachable" };
+      return {
+        ok: false,
+        error: "Backend server (port 8000) is offline. Start the backend or click 'Explore as Guest' below to test immediately."
+      };
     }
   };
 
@@ -77,29 +91,26 @@ export const AuthProvider = ({ children }) => {
       return { ok: true, user: data.user };
     } catch (error) {
       console.error("Login Error:", error);
-      return { ok: false, error: "Something went wrong" };
+      return {
+        ok: false,
+        error: "Backend server (port 8000) is offline. Start the backend or click 'Explore as Guest' below to test immediately."
+      };
     }
   };
 
   const logout = async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/auth/logout", {
+      localStorage.removeItem("algoatlas_user");
+      await fetch("http://localhost:8000/api/auth/logout", {
         method: "GET",
         credentials: "include",
       });
-      const data = await res.json();
-
-      if (!res.ok) {
-        return { ok: false, error: data.message || "Logout failed" };
-      }
-
-      setUser(null);
-      return { ok: true };
     } catch (error) {
       console.error("Logout Error:", error);
+    } finally {
       setUser(null);
-      return { ok: false, error: "Logout failed" };
     }
+    return { ok: true };
   };
 
   const updateProfile = async ({ handles, platformData }) => {
