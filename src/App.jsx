@@ -13,6 +13,7 @@ import { ThemeProvider } from './component/ThemeProvider'
 import { useState, useEffect } from 'react'
 import Chatbot from './AiChatbot/Chatbot'
 import { allAlgos } from './component/Algo_List'
+import { API_URL, getAuthHeaders } from './config/api'
 
 
 function Protected({ children }) {
@@ -52,8 +53,9 @@ function AppInner() {
 
     const loadWishlistFromDB = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/user/wishlist", {
+        const res = await fetch(`${API_URL}/api/user/wishlist`, {
           method: "GET",
+          headers: getAuthHeaders(),
           credentials: "include",
         });
         const data = await res.json();
@@ -68,9 +70,9 @@ function AppInner() {
               const merged = Array.from(new Set([...dbIds, ...localIds]));
               if (merged.length > dbIds.length) {
                 dbIds = merged;
-                fetch("http://localhost:8000/api/user/wishlist", {
+                fetch(`${API_URL}/api/user/wishlist`, {
                   method: "PUT",
-                  headers: { "Content-Type": "application/json" },
+                  headers: getAuthHeaders(),
                   credentials: "include",
                   body: JSON.stringify({ wishlist: merged }),
                 }).catch(() => {});
@@ -104,9 +106,9 @@ function AppInner() {
 
     if (user) {
       try {
-        const res = await fetch("http://localhost:8000/api/user/wishlist/toggle", {
+        const res = await fetch(`${API_URL}/api/user/wishlist/toggle`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: getAuthHeaders(),
           credentials: "include",
           body: JSON.stringify({ algoId: algo.id }),
         });

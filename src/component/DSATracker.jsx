@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./DSATracker.css";
 import { useAuth } from "./AuthContext";
+import { API_URL, getAuthHeaders } from "../config/api";
 
 const TAGS = ["Array", "String", "Tree", "Graph", "DP", "Sorting", "Searching", "Greedy", "Backtracking", "Other"];
 const DIFFICULTIES = ["Easy", "Medium", "Hard"];
@@ -58,8 +59,9 @@ export default function DSATracker() {
     const fetchTasks = async () => {
       setDbStatus("syncing");
       try {
-        const res = await fetch("http://localhost:8000/api/user/tracker", {
+        const res = await fetch(`${API_URL}/api/user/tracker`, {
           method: "GET",
+          headers: getAuthHeaders(),
           credentials: "include",
         });
         const data = await res.json();
@@ -72,9 +74,9 @@ export default function DSATracker() {
           } else {
             // Database has no tasks for this user yet - sync initial/local tasks to DB
             const localTasks = tasks.length > 0 ? tasks : SAMPLE_TASKS;
-            const syncRes = await fetch("http://localhost:8000/api/user/tracker/sync", {
+            const syncRes = await fetch(`${API_URL}/api/user/tracker/sync`, {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: getAuthHeaders(),
               credentials: "include",
               body: JSON.stringify({ tasks: localTasks }),
             });
@@ -130,9 +132,9 @@ export default function DSATracker() {
       if (user) {
         try {
           setDbStatus("syncing");
-          const res = await fetch(`http://localhost:8000/api/user/tracker/${currentEditId}`, {
+          const res = await fetch(`${API_URL}/api/user/tracker/${currentEditId}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: getAuthHeaders(),
             credentials: "include",
             body: JSON.stringify(form),
           });
@@ -157,9 +159,9 @@ export default function DSATracker() {
       if (user) {
         try {
           setDbStatus("syncing");
-          const res = await fetch("http://localhost:8000/api/user/tracker", {
+          const res = await fetch(`${API_URL}/api/user/tracker`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: getAuthHeaders(),
             credentials: "include",
             body: JSON.stringify(newTask),
           });
@@ -184,8 +186,9 @@ export default function DSATracker() {
     if (user) {
       try {
         setDbStatus("syncing");
-        const res = await fetch(`http://localhost:8000/api/user/tracker/${id}`, {
+        const res = await fetch(`${API_URL}/api/user/tracker/${id}`, {
           method: "DELETE",
+          headers: getAuthHeaders(),
           credentials: "include",
         });
         if (res.ok) {
@@ -210,9 +213,9 @@ export default function DSATracker() {
     if (user) {
       try {
         setDbStatus("syncing");
-        const res = await fetch(`http://localhost:8000/api/user/tracker/${id}`, {
+        const res = await fetch(`${API_URL}/api/user/tracker/${id}`, {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: getAuthHeaders(),
           credentials: "include",
           body: JSON.stringify({ status: nextStatus }),
         });

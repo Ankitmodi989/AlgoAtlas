@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { API_URL, getAuthHeaders } from "../config/api";
 
 export const AuthContext = createContext();
 
@@ -10,8 +11,9 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/auth/me", {
+        const res = await fetch(`${API_URL}/api/auth/me`, {
           method: "GET",
+          headers: getAuthHeaders(),
           credentials: "include",
         });
         const data = await res.json();
@@ -32,11 +34,9 @@ export const AuthProvider = ({ children }) => {
 
   const signup = async (name, email, password, handles) => {
     try {
-      const res = await fetch("http://localhost:8000/api/auth/signup", {
+      const res = await fetch(`${API_URL}/api/auth/signup`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: getAuthHeaders(),
         credentials: "include",
         body: JSON.stringify({ name, email, password, handles }),
       });
@@ -44,6 +44,10 @@ export const AuthProvider = ({ children }) => {
 
       if (!res.ok) {
         return { ok: false, error: data.message || "Signup failed" };
+      }
+
+      if (data.token) {
+        localStorage.setItem("algoatlas_token", data.token);
       }
 
       const userData = data.user || data;
@@ -60,11 +64,9 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const res = await fetch("http://localhost:8000/api/auth/login", {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: getAuthHeaders(),
         credentials: "include",
         body: JSON.stringify({ email, password }),
       });
@@ -72,6 +74,10 @@ export const AuthProvider = ({ children }) => {
 
       if (!res.ok) {
         return { ok: false, error: data.message || "Login failed" };
+      }
+
+      if (data.token) {
+        localStorage.setItem("algoatlas_token", data.token);
       }
 
       setUser(data.user);
@@ -87,13 +93,15 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await fetch("http://localhost:8000/api/auth/logout", {
+      await fetch(`${API_URL}/api/auth/logout`, {
         method: "GET",
+        headers: getAuthHeaders(),
         credentials: "include",
       });
     } catch (error) {
       console.error("Logout Error:", error);
     } finally {
+      localStorage.removeItem("algoatlas_token");
       setUser(null);
     }
     return { ok: true };
@@ -101,9 +109,9 @@ export const AuthProvider = ({ children }) => {
 
   const updateProfile = async ({ handles, platformData }) => {
     try {
-      const res = await fetch("http://localhost:8000/api/auth/profile", {
+      const res = await fetch(`${API_URL}/api/auth/profile`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: getAuthHeaders(),
         credentials: "include",
         body: JSON.stringify({ handles, platformData }),
       });

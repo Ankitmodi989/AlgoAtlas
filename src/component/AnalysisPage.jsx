@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import { ThemeContext } from "./ThemeProvider";
 import { parsePlatformHandle } from "./AuthPage";
+import { API_URL, getAuthHeaders } from "../config/api";
 import {
   TrendingUp,
   Award,
@@ -117,8 +118,9 @@ export default function AnalysisPage() {
         codechef: activeHandles.codechef || "",
       }).toString();
 
-      const res = await fetch(`http://localhost:8000/api/auth/live-stats?${queryParams}`, {
+      const res = await fetch(`${API_URL}/api/auth/live-stats?${queryParams}`, {
         method: "GET",
+        headers: getAuthHeaders(),
         credentials: "include",
       });
 
