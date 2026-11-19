@@ -1,17 +1,16 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { API_URL, getAuthHeaders } from "../config/api";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  // ok we have done 
   // Fetch the current authenticated user from the backend on app load.
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/auth/me`, {
+        const res = await fetch("http://localhost:8000/api/auth/me", {
           method: "GET",
           headers: getAuthHeaders(),
           credentials: "include",
@@ -32,9 +31,9 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, []);
 
-  const signup = async (name, email, password, handles) => {
+  const signup = async ({ name, email, password, handles }) => {
     try {
-      const res = await fetch(`${API_URL}/api/auth/signup`, {
+      const res = await fetch("http://localhost:8000/api/auth/signup", {
         method: "POST",
         headers: getAuthHeaders(),
         credentials: "include",
@@ -53,8 +52,8 @@ export const AuthProvider = ({ children }) => {
       const userData = data.user || data;
       setUser(userData);
       return { ok: true, user: userData };
-    } catch (error) {
-      console.error("Signup Error:", error);
+    } catch (err) {
+      console.error(err);
       return {
         ok: false,
         error: "Unable to connect to the backend. Please try again."
@@ -64,7 +63,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const res = await fetch(`${API_URL}/api/auth/login`, {
+      const res = await fetch("http://localhost:8000/api/auth/login", {
         method: "POST",
         headers: getAuthHeaders(),
         credentials: "include",
@@ -93,7 +92,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await fetch(`${API_URL}/api/auth/logout`, {
+      await fetch("http://localhost:8000/api/auth/logout", {
         method: "GET",
         headers: getAuthHeaders(),
         credentials: "include",
@@ -109,7 +108,7 @@ export const AuthProvider = ({ children }) => {
 
   const updateProfile = async ({ handles, platformData }) => {
     try {
-      const res = await fetch(`${API_URL}/api/auth/profile`, {
+      const res = await fetch("http://localhost:8000/api/auth/profile", {
         method: "PUT",
         headers: getAuthHeaders(),
         credentials: "include",

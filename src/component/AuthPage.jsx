@@ -97,7 +97,12 @@ export default function AuthPage() {
 
     const result = await (mode === "login"
       ? login(form.email, form.password)
-      : signup(form.name, form.email, form.password, handles));
+      : signup({
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        handles
+      }));
     setLoading(false);
     if (result.ok) navigate("/");
     else setErrors({ general: result.error });
