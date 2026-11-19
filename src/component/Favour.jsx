@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Container from './Container';
 
-const Favour = ({ favour, toggleFavour }) => {
+const Favour = ({ favour, toggleFavour, dbSynced }) => {
   return (
     <div className="max-w-7xl mx-auto px-6 py-10 min-h-[calc(100vh-64px)]">
       <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
@@ -14,9 +14,16 @@ const Favour = ({ favour, toggleFavour }) => {
             Algorithms you've saved for quick reference and study
           </p>
         </div>
-        <span className="text-xs px-3 py-1 rounded-full bg-red-500/10 text-red-500 border border-red-500/30 font-semibold">
-          {favour.length} {favour.length === 1 ? 'item' : 'items'}
-        </span>
+        <div className="flex items-center gap-2">
+          {dbSynced && (
+            <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center gap-1 font-medium">
+              <span>●</span> Cloud DB Synced
+            </span>
+          )}
+          <span className="text-xs px-3 py-1 rounded-full bg-red-500/10 text-red-500 border border-red-500/30 font-semibold">
+            {favour.length} {favour.length === 1 ? 'item' : 'items'}
+          </span>
+        </div>
       </div>
 
       {favour.length === 0 ? (

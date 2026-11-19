@@ -10,8 +10,9 @@ import AuthPage from './component/AuthPage'
 import AboutPage from './component/AboutPage'
 import AnalysisPage from './component/AnalysisPage'
 import { ThemeProvider } from './component/ThemeProvider'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Chatbot from './AiChatbot/Chatbot'
+import { allAlgos } from './component/Algo_List'
 
 
 function Protected({ children }) {
@@ -29,10 +30,93 @@ function Protected({ children }) {
 }
 
 function AppInner() {
-  const [favour, setFavour] = useState([]);
-  const toggleFavour = (algo) => {
-    const exists = favour.find(item => item.id === algo.id);
-    setFavour(exists ? favour.filter(item => item.id !== algo.id) : [...favour, algo]);
+  const { user } = useAuth();
+  const [favour, setFavour] = useState(() => {
+    try {
+      const saved = localStorage.getItem("algoatlas_wishlist");
+      if (saved) {
+        const ids = JSON.parse(saved);
+        return allAlgos.filter(item => ids.includes(item.id));
+      }
+    } catch { }
+    return [];
+  });
+  const [dbWishlistSynced, setDbWishlistSynced] = useState(false);
+
+  // Sync wishlist with backend database when user changes / logs in
+  useEffect(() => {
+    if (!user) {
+      setDbWishlistSynced(false);
+      return;
+    }
+
+    const loadWishlistFromDB = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/api/user/wishlist", {
+          method: "GET",
+          credentials: "include",
+        });
+        const data = await res.json();
+        if (res.ok && Array.isArray(data.wishlist)) {
+          let dbIds = data.wishlist;
+
+          // Merge any previously saved local wishlist items with cloud database
+          try {
+            const localSaved = localStorage.getItem("algoatlas_wishlist");
+            if (localSaved) {
+              const localIds = JSON.parse(localSaved);
+              const merged = Array.from(new Set([...dbIds, ...localIds]));
+              if (merged.length > dbIds.length) {
+                dbIds = merged;
+                fetch("http://localhost:8000/api/user/wishlist", {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  credentials: "include",
+                  body: JSON.stringify({ wishlist: merged }),
+                }).catch(() => {});
+              }
+            }
+          } catch { }
+
+          localStorage.setItem("algoatlas_wishlist", JSON.stringify(dbIds));
+          setFavour(allAlgos.filter(algo => dbIds.includes(algo.id)));
+          setDbWishlistSynced(true);
+        }
+      } catch (err) {
+        console.warn("Could not load wishlist from database:", err.message);
+      }
+    };
+
+    loadWishlistFromDB();
+  }, [user]);
+
+  const toggleFavour = async (algo) => {
+    const exists = favour.some(item => item.id === algo.id);
+    const updated = exists ? favour.filter(item => item.id !== algo.id) : [...favour, algo];
+    setFavour(updated);
+
+    const ids = updated.map(item => item.id);
+    try {
+      localStorage.setItem("algoatlas_wishlist", JSON.stringify(ids));
+    } catch (err) {
+      console.warn("Could not save wishlist to localStorage:", err);
+    }
+
+    if (user) {
+      try {
+        const res = await fetch("http://localhost:8000/api/user/wishlist/toggle", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ algoId: algo.id }),
+        });
+        if (res.ok) {
+          setDbWishlistSynced(true);
+        }
+      } catch (err) {
+        console.warn("Failed to sync wishlist change with database:", err.message);
+      }
+    }
   };
 
   return (
@@ -42,7 +126,7 @@ function AppInner() {
         <Route path="/login"  element={<AuthPage />} />
         <Route path="/signup" element={<AuthPage />} />
         <Route path="/" element={<Protected><Content favour={favour} toggleFavour={toggleFavour} /></Protected>} />
-        <Route path="/favour" element={<Protected><Favour favour={favour} toggleFavour={toggleFavour} /></Protected>} />
+        <Route path="/favour" element={<Protected><Favour favour={favour} toggleFavour={toggleFavour} dbSynced={dbWishlistSynced} /></Protected>} />
         <Route path="/algo/:id" element={<Protected><Algo_page /></Protected>} />
         <Route path="/tracker" element={<Protected><DSATracker /></Protected>} />
         <Route path="/analysis" element={<Protected><AnalysisPage /></Protected>} />

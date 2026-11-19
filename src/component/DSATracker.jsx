@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./DSATracker.css";
+import { useAuth } from "./AuthContext";
 
 const TAGS = ["Array", "String", "Tree", "Graph", "DP", "Sorting", "Searching", "Greedy", "Backtracking", "Other"];
 const DIFFICULTIES = ["Easy", "Medium", "Hard"];
@@ -19,6 +20,8 @@ const SAMPLE_TASKS = [
 ];
 
 export default function DSATracker() {
+  const { user } = useAuth();
+
   const [tasks, setTasks] = useState(() => {
     try {
       const saved = localStorage.getItem("dsa_tasks");
@@ -26,6 +29,7 @@ export default function DSATracker() {
     } catch { return SAMPLE_TASKS; }
   });
 
+  const [dbStatus, setDbStatus] = useState("checking");
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState(null);
   const [filterStatus, setFilterStatus] = useState("All");
@@ -44,6 +48,56 @@ export default function DSATracker() {
   const [currentRevIdx, setCurrentRevIdx] = useState(0);
   const [revisionDone, setRevisionDone] = useState(false);
 
+  // ── Database Sync on load / user switch ──
+  useEffect(() => {
+    if (!user) {
+      setDbStatus("local");
+      return;
+    }
+
+    const fetchTasks = async () => {
+      setDbStatus("syncing");
+      try {
+        const res = await fetch("http://localhost:8000/api/user/tracker", {
+          method: "GET",
+          credentials: "include",
+        });
+        const data = await res.json();
+
+        if (res.ok && Array.isArray(data.tasks)) {
+          if (data.tasks.length > 0) {
+            setTasks(data.tasks);
+            localStorage.setItem("dsa_tasks", JSON.stringify(data.tasks));
+            setDbStatus("synced");
+          } else {
+            // Database has no tasks for this user yet - sync initial/local tasks to DB
+            const localTasks = tasks.length > 0 ? tasks : SAMPLE_TASKS;
+            const syncRes = await fetch("http://localhost:8000/api/user/tracker/sync", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              credentials: "include",
+              body: JSON.stringify({ tasks: localTasks }),
+            });
+            const syncData = await syncRes.json();
+            if (syncRes.ok && Array.isArray(syncData.tasks)) {
+              setTasks(syncData.tasks);
+              localStorage.setItem("dsa_tasks", JSON.stringify(syncData.tasks));
+            }
+            setDbStatus("synced");
+          }
+        } else {
+          setDbStatus("local");
+        }
+      } catch (err) {
+        console.warn("Could not sync tasks with backend database:", err);
+        setDbStatus("error");
+      }
+    };
+
+    fetchTasks();
+  }, [user]);
+
+  // Keep localStorage updated as persistent fallback
   useEffect(() => {
     try {
       localStorage.setItem("dsa_tasks", JSON.stringify(tasks));
@@ -64,27 +118,112 @@ export default function DSATracker() {
     setShowForm(true);
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!form.title.trim()) return;
+
     if (editId) {
-      setTasks(ts => ts.map(t => t.id === editId ? { ...t, ...form } : t));
+      const currentEditId = editId;
+      setTasks(ts => ts.map(t => t.id === currentEditId ? { ...t, ...form } : t));
+      setShowForm(false);
+      setEditId(null);
+
+      if (user) {
+        try {
+          setDbStatus("syncing");
+          const res = await fetch(`http://localhost:8000/api/user/tracker/${currentEditId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(form),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.task) {
+              setTasks(ts => ts.map(t => (t.id === currentEditId || t.id === data.task.id) ? { ...t, ...data.task } : t));
+            }
+            setDbStatus("synced");
+          }
+        } catch (err) {
+          console.warn("Error updating task in database:", err);
+          setDbStatus("error");
+        }
+      }
     } else {
-      setTasks(ts => [{ id: uid(), ...form, createdAt: Date.now() }, ...ts]);
+      const tempId = uid();
+      const newTask = { id: tempId, ...form, createdAt: Date.now() };
+      setTasks(ts => [newTask, ...ts]);
+      setShowForm(false);
+
+      if (user) {
+        try {
+          setDbStatus("syncing");
+          const res = await fetch("http://localhost:8000/api/user/tracker", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(newTask),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.task) {
+              setTasks(ts => ts.map(t => t.id === tempId ? { ...t, ...data.task, id: data.task.id || data.task._id } : t));
+            }
+            setDbStatus("synced");
+          }
+        } catch (err) {
+          console.warn("Error saving task to database:", err);
+          setDbStatus("error");
+        }
+      }
     }
-    setShowForm(false);
-    setEditId(null);
   }
 
-  function deleteTask(id) {
+  async function deleteTask(id) {
     setTasks(ts => ts.filter(t => t.id !== id));
+
+    if (user) {
+      try {
+        setDbStatus("syncing");
+        const res = await fetch(`http://localhost:8000/api/user/tracker/${id}`, {
+          method: "DELETE",
+          credentials: "include",
+        });
+        if (res.ok) {
+          setDbStatus("synced");
+        }
+      } catch (err) {
+        console.warn("Error deleting task from database:", err);
+        setDbStatus("error");
+      }
+    }
   }
 
-  function cycleStatus(id) {
+  async function cycleStatus(id) {
+    let nextStatus = "To Do";
     setTasks(ts => ts.map(t => {
       if (t.id !== id) return t;
       const idx = STATUSES.indexOf(t.status);
-      return { ...t, status: STATUSES[(idx + 1) % STATUSES.length] };
+      nextStatus = STATUSES[(idx + 1) % STATUSES.length];
+      return { ...t, status: nextStatus };
     }));
+
+    if (user) {
+      try {
+        setDbStatus("syncing");
+        const res = await fetch(`http://localhost:8000/api/user/tracker/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ status: nextStatus }),
+        });
+        if (res.ok) {
+          setDbStatus("synced");
+        }
+      } catch (err) {
+        console.warn("Error updating task status in database:", err);
+        setDbStatus("error");
+      }
+    }
   }
 
   // ── Revision Logic ──
@@ -146,8 +285,30 @@ export default function DSATracker() {
       {/* ── Header ── */}
       <div className="dsa-header">
         <div>
-          <h1>DSA Practice Tracker</h1>
-          <p>Track your questions, mark progress, add notes</p>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+            <h1>DSA Practice Tracker</h1>
+            {dbStatus === "synced" && (
+              <span style={{ fontSize: "11px", background: "rgba(16, 185, 129, 0.15)", color: "#10b981", border: "1px solid rgba(16, 185, 129, 0.3)", padding: "2px 8px", borderRadius: "12px", fontWeight: 600, display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                <span>●</span> Database Synced
+              </span>
+            )}
+            {dbStatus === "syncing" && (
+              <span style={{ fontSize: "11px", background: "rgba(59, 130, 246, 0.15)", color: "#3b82f6", border: "1px solid rgba(59, 130, 246, 0.3)", padding: "2px 8px", borderRadius: "12px", fontWeight: 600, display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                <span>↻</span> Syncing with DB...
+              </span>
+            )}
+            {dbStatus === "local" && (
+              <span style={{ fontSize: "11px", background: "rgba(139, 92, 246, 0.15)", color: "#a78bfa", border: "1px solid rgba(139, 92, 246, 0.3)", padding: "2px 8px", borderRadius: "12px", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                <span>💾</span> Local Mode
+              </span>
+            )}
+            {dbStatus === "error" && (
+              <span style={{ fontSize: "11px", background: "rgba(239, 68, 68, 0.15)", color: "#f87171", border: "1px solid rgba(239, 68, 68, 0.3)", padding: "2px 8px", borderRadius: "12px", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                <span>⚠</span> Offline (Local Fallback)
+              </span>
+            )}
+          </div>
+          <p>Track your questions, mark progress, add notes — saved to cloud database</p>
         </div>
         <div style={{ display: "flex", gap: "10px" }}>
           <button onClick={() => { setShowRevision(true); resetRevision(); }} className="dsa-add-btn" style={{ background: "#8b5cf6" }}>🔁 Revise</button>

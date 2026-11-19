@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
-        require: true,
+        required: true,
         unique: false,
         lowercase: false,
         uppercase: false,
@@ -23,7 +23,7 @@ const UserSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        require: true,
+        required: true,
         unique: true,
         trim: true,
         lowercase: true,
@@ -44,7 +44,6 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: [true, "Password is required"],
-        unique: true,
         minlength: [8, "password must be at least 8 characters"],
         maxlength: [128, "password cannot exceed 128"],
         trim: true,
@@ -71,6 +70,10 @@ const UserSchema = new mongoose.Schema({
     platformData: {
         type: Object,
         default: null
+    },
+    wishlist: {
+        type: [String],
+        default: []
     }
 },
     {

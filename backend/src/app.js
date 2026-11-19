@@ -13,7 +13,8 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/api/auth',auth);
+app.use('/api/auth', auth);
+app.use('/api/user', userRouter);
 
 app.use((err,req,res,next)=>{
     console.log(err);

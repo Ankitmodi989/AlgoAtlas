@@ -35,7 +35,8 @@ auth.post('/signup', async (req, res) => {
                 _id: userdata._id,
                 name: userdata.name,
                 email: userdata.email,
-                handles: userdata.handles
+                handles: userdata.handles,
+                wishlist: userdata.wishlist || []
             }
         });
 
@@ -78,7 +79,8 @@ auth.post('/login', async (req, res) => {
                 _id: data._id,
                 name: data.name,
                 email: data.email,
-                handles: data.handles
+                handles: data.handles,
+                wishlist: data.wishlist || []
             }
         });
 
