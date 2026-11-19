@@ -130,7 +130,7 @@ function AppInner() {
         <Route path="/algo/:id" element={<Protected><Algo_page /></Protected>} />
         <Route path="/tracker" element={<Protected><DSATracker /></Protected>} />
         <Route path="/analysis" element={<Protected><AnalysisPage /></Protected>} />
-        <Route path="/about" element={<AboutPage />} />
+        <Route path="/about" element={<Protected><AboutPage /></Protected>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <Chatbot></Chatbot>

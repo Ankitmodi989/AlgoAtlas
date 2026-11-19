@@ -183,11 +183,6 @@ export default function AnalysisPage() {
   }
 
   // Calculations
-  const totalSolvedAll =
-    (stats.leetcode?.totalSolved || 0) +
-    (stats.codeforces?.solvedCount || 0) +
-    (stats.codechef?.solvedCount || 0);
-
   const lcRadius = 36;
   const lcCircumference = 2 * Math.PI * lcRadius;
   const lcTotalQ = stats.leetcode?.totalQuestions || 3350;
@@ -207,20 +202,35 @@ export default function AnalysisPage() {
   const chartHeight = 160;
 
   const history = stats.ratingHistory || INITIAL_STATS.ratingHistory;
-  const pointsCF = history.map((pt, idx) => {
-    const x = (idx / (history.length - 1)) * (chartWidth - 40) + 20;
+  const activity = stats.activity || {};
+  const topics = stats.topics || [];
+  const totalSolvedAll = stats.totalSolved ?? (
+    (stats.leetcode?.totalSolved || 0) +
+    (stats.codeforces?.solvedCount || 0) +
+    (stats.codechef?.solvedCount || 0)
+  );
+  const maxTopicSolved = Math.max(...topics.map(topic => topic.solved || 0), 1);
+  const pointsCF = history.filter(pt => pt.cf != null).map((pt, idx) => {
+    const x = (idx / Math.max(history.filter(p => p.cf != null).length - 1, 1)) * (chartWidth - 40) + 20;
     const y = chartHeight - ((pt.cf - minChartRating) / (maxChartRating - minChartRating)) * (chartHeight - 30) - 15;
     return { x, y, val: pt.cf, month: pt.month };
   });
 
-  const pointsLC = history.map((pt, idx) => {
-    const x = (idx / (history.length - 1)) * (chartWidth - 40) + 20;
+  const pointsLC = history.filter(pt => pt.lc != null).map((pt, idx) => {
+    const x = (idx / Math.max(history.filter(p => p.lc != null).length - 1, 1)) * (chartWidth - 40) + 20;
     const y = chartHeight - ((pt.lc - minChartRating) / (maxChartRating - minChartRating)) * (chartHeight - 30) - 15;
     return { x, y, val: pt.lc, month: pt.month };
   });
 
+  const pointsCC = history.filter(pt => pt.cc != null).map((pt, idx) => {
+    const x = (idx / Math.max(history.filter(p => p.cc != null).length - 1, 1)) * (chartWidth - 40) + 20;
+    const y = chartHeight - (((pt.cc || 0) - minChartRating) / (maxChartRating - minChartRating)) * (chartHeight - 30) - 15;
+    return { x, y, val: pt.cc || 0, month: pt.month };
+  });
+
   const pathCF = pointsCF.reduce((acc, pt, i) => (i === 0 ? `M ${pt.x} ${pt.y}` : `${acc} L ${pt.x} ${pt.y}`), "");
   const pathLC = pointsLC.reduce((acc, pt, i) => (i === 0 ? `M ${pt.x} ${pt.y}` : `${acc} L ${pt.x} ${pt.y}`), "");
+  const pathCC = pointsCC.reduce((acc, pt, i) => (i === 0 ? `M ${pt.x} ${pt.y}` : `${acc} L ${pt.x} ${pt.y}`), "");
 
   const modalParsedLC = parsePlatformHandle("leetcode", modalForm.leetcodeInput);
   const modalParsedCF = parsePlatformHandle("codeforces", modalForm.codeforcesInput);
@@ -376,13 +386,7 @@ export default function AnalysisPage() {
           </div>
           <div className="kpi-info">
             <span className="kpi-label">Peak Contest Rating</span>
-            <span className="kpi-value">
-              {Math.max(
-                stats.leetcode?.contestRating || 0,
-                stats.codeforces?.maxRating || 0,
-                stats.codechef?.maxRating || 0
-              )}
-            </span>
+            <span className="kpi-value">{stats.peakRating || 0}</span>
             <span className="kpi-meta positive">
               {stats.codeforces?.rank !== "Unranked" ? stats.codeforces?.rank : stats.leetcode?.badge}
             </span>
@@ -395,9 +399,7 @@ export default function AnalysisPage() {
           </div>
           <div className="kpi-info">
             <span className="kpi-label">Active Streak</span>
-            <span className="kpi-value">
-              {totalSolvedAll > 50 ? "18 Days" : totalSolvedAll > 0 ? "4 Days" : "0 Days"}
-            </span>
+            <span className="kpi-value">{stats.streak || 0} Days</span>
             <span className="kpi-meta positive">🔥 Verified activity</span>
           </div>
         </div>
@@ -408,9 +410,7 @@ export default function AnalysisPage() {
           </div>
           <div className="kpi-info">
             <span className="kpi-label">Contests Played</span>
-            <span className="kpi-value">
-              {(stats.codeforces?.contestsCount || 0) + (stats.codechef?.contestsCount || 0)}
-            </span>
+            <span className="kpi-value">{stats.contestsPlayed || 0}</span>
             <span className="kpi-meta neutral">Official live rounds</span>
           </div>
         </div>
@@ -705,6 +705,10 @@ export default function AnalysisPage() {
                 <span className="legend-dot" style={{ background: "#60a5fa" }}></span>
                 Codeforces
               </span>
+              <span>
+                <span className="legend-dot" style={{ background: "#fbbf24" }}></span>
+                CodeChef
+              </span>
             </div>
           </div>
 
@@ -751,6 +755,29 @@ export default function AnalysisPage() {
                   strokeWidth="2.5"
                 >
                   <title>{`Codeforces: ${p.val} (${p.month})`}</title>
+                </circle>
+              ))}
+
+              {/* CodeChef curve */}
+              <path
+                d={pathCC}
+                fill="none"
+                stroke="#fbbf24"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              {pointsCC.map((p, i) => (
+                <circle
+                  key={`cc-${i}`}
+                  cx={p.x}
+                  cy={p.y}
+                  r="4.5"
+                  fill={chartDotFill}
+                  stroke="#fbbf24"
+                  strokeWidth="2.5"
+                >
+                  <title>{`CodeChef: ${p.val} (${p.month})`}</title>
                 </circle>
               ))}
 
@@ -804,16 +831,16 @@ export default function AnalysisPage() {
           </div>
 
           <div className="topic-list">
-            {(stats.topics || INITIAL_STATS.topics).map((t, idx) => (
+            {(topics.length > 0 ? topics : [{ name: "No topic submissions found", solved: 0 }]).map((t, idx) => (
               <div className="topic-row" key={idx}>
                 <div className="topic-meta">
                   <span>{t.name}</span>
                   <span style={{ fontWeight: 700, color: "#38bdf8" }}>
-                    {t.solved} / {t.total} ({t.pct}%)
+                    {t.solved} solved
                   </span>
                 </div>
                 <div className="topic-progress-bg">
-                  <div className="topic-progress-fill" style={{ width: `${t.pct}%` }} />
+                  <div className="topic-progress-fill" style={{ width: `${Math.round(((t.solved || 0) / maxTopicSolved) * 100)}%` }} />
                 </div>
               </div>
             ))}
@@ -833,13 +860,16 @@ export default function AnalysisPage() {
         <div className="heatmap-grid-scroll">
           <div className="heatmap-grid">
             {Array.from({ length: 168 }).map((_, i) => {
-              const mod = (i * 7 + (i % 3) * 5) % 11;
-              const heatLevel = mod > 8 ? 4 : mod > 5 ? 3 : mod > 2 ? 2 : mod > 0 ? 1 : 0;
+              const date = new Date();
+              date.setDate(date.getDate() - (167 - i));
+              const day = date.toLocaleDateString();
+              const solved = activity[day] || 0;
+              const heatLevel = solved >= 8 ? 4 : solved >= 5 ? 3 : solved >= 2 ? 2 : solved >= 1 ? 1 : 0;
               return (
                 <div
                   key={i}
                   className={`heatmap-cell heat-${heatLevel}`}
-                  title={`Day ${i + 1}: ${heatLevel > 0 ? heatLevel * 2 : 0} problems solved`}
+                  title={`${day}: ${solved} recent submissions`}
                 />
               );
             })}

@@ -6,7 +6,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch current logged-in user from backend database or local fallback on app load
+  // Fetch the current authenticated user from the backend on app load.
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -18,23 +18,10 @@ export const AuthProvider = ({ children }) => {
 
         if (res.ok && data.user) {
           setUser(data.user);
-          setLoading(false);
           return;
         }
       } catch (error) {
-        console.warn("Backend auth check unavailable (server might be offline):", error.message);
-      }
-
-      // Fallback: check localStorage for saved guest or offline session
-      try {
-        const saved = localStorage.getItem("algoatlas_user");
-        if (saved) {
-          setUser(JSON.parse(saved));
-        } else {
-          setUser(null);
-        }
-      } catch {
-        setUser(null);
+        console.warn("Backend auth check unavailable:", error.message);
       } finally {
         setLoading(false);
       }
@@ -43,7 +30,7 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, []);
 
-  const signup = async (name, email, password) => {
+  const signup = async (name, email, password, handles) => {
     try {
       const res = await fetch("http://localhost:8000/api/auth/signup", {
         method: "POST",
@@ -66,7 +53,7 @@ export const AuthProvider = ({ children }) => {
       console.error("Signup Error:", error);
       return {
         ok: false,
-        error: "Backend server (port 8000) is offline. Start the backend or click 'Explore as Guest' below to test immediately."
+        error: "Unable to connect to the backend. Please try again."
       };
     }
   };
@@ -93,14 +80,13 @@ export const AuthProvider = ({ children }) => {
       console.error("Login Error:", error);
       return {
         ok: false,
-        error: "Backend server (port 8000) is offline. Start the backend or click 'Explore as Guest' below to test immediately."
+        error: "Unable to connect to the backend. Please try again."
       };
     }
   };
 
   const logout = async () => {
     try {
-      localStorage.removeItem("algoatlas_user");
       await fetch("http://localhost:8000/api/auth/logout", {
         method: "GET",
         credentials: "include",

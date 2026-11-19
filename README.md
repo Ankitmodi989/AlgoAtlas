@@ -18,8 +18,7 @@
 - [🛠️ Tech Stack](#️-tech-stack)
 - [📁 Project Architecture](#-project-architecture)
 - [🚀 Quick Start Guide](#-quick-start-guide)
-  - [Option A: Instant Preview (No Database Required)](#option-a-instant-preview-no-database-required)
-  - [Option B: Full-Stack Setup (Frontend + Backend + MongoDB)](#option-b-full-stack-setup-frontend--backend--mongodb)
+  - [Full-Stack Setup (Frontend + Backend + MongoDB)](#full-stack-setup-frontend--backend--mongodb)
 - [⚙️ Environment Configuration](#️-environment-configuration)
 - [📡 Backend API Reference](#-backend-api-reference)
 - [📊 Supported Algorithms Matrix](#-supported-algorithms-matrix)
@@ -36,8 +35,8 @@
 - **Interactive Quizzes**: Built-in 5-question comprehension quizzes per algorithm to test and reinforce concepts.
 - **Comprehensive Theory & Complexity Cards**: Best, Average, and Worst case time complexities, space complexity, stability, in-place indicators, pros, cons, and practical use cases.
 - **Flexible Authentication**:
-  - **Full-Stack Mode**: Secure authentication with Node.js/Express, MongoDB, bcrypt password hashing, and JWT tokens in HTTP-only cookies.
-  - **Guest Mode**: Instant one-click preview without needing to start or configure a database.
+  - **Full-Stack Authentication**: Secure authentication with Node.js/Express, MongoDB, bcrypt password hashing, and JWT tokens in HTTP-only cookies.
+  - **Protected Access**: Users must sign up or log in before accessing the application.
 - **DSA Progress Tracker**: Track topic completion across Arrays, Strings, Linked Lists, Trees, and Dynamic Programming.
 - **Wishlist / Bookmarks**: Save important algorithms for quick revision.
 - **AI Chatbot Assistant**: Embedded Gemini AI assistant floating widget to answer questions about time complexities, optimizations, and DSA problems.
@@ -83,8 +82,8 @@ DSA-visualizer/
 │   │   ├── AboutPage.jsx         # About platform page
 │   │   ├── Algo_List.jsx         # Algorithm metadata & catalog (29 algorithms)
 │   │   ├── Algo_page.jsx         # Dynamic algorithm route handler
-│   │   ├── AuthContext.jsx       # Auth provider (Backend + Guest fallback)
-│   │   ├── AuthPage.jsx          # Login & Sign-Up with Guest option
+│   │   ├── AuthContext.jsx       # Backend authentication provider
+│   │   ├── AuthPage.jsx          # Login & Sign-Up
 │   │   ├── Container.jsx         # Grid container
 │   │   ├── Content.jsx           # Main dashboard & algorithm gallery
 │   │   ├── DSATracker.jsx        # DSA progress tracker
@@ -115,7 +114,7 @@ DSA-visualizer/
 │   │   │   ├── generateToken.js  # JWT signing helper
 │   │   │   └── sendToken.js      # HTTP-only cookie dispatcher
 │   │   └── app.js                # Express app setup, CORS, and parsers
-│   ├── .env.example              # Template backend environment variables
+│   ├── .env                       # Local backend environment variables (not committed)
 │   ├── package.json              # Backend dependencies and scripts
 │   └── server.js                 # Backend entry point (Port 8000)
 ├── index.html                    # HTML entry point
@@ -137,29 +136,7 @@ npm -v
 
 ---
 
-### Option A: Instant Preview (No Database Required)
-
-If you want to immediately run, explore, and test the algorithm visualizers without setting up MongoDB:
-
-1. **Install frontend dependencies** (from the root folder):
-   ```bash
-   npm install
-   ```
-
-2. **Start the Vite development server**:
-   ```bash
-   npm run dev
-   ```
-
-3. **Open in browser**:
-   Navigate to **`http://localhost:5173`**.
-
-4. **Click "🚀 Explore as Guest (Instant Preview)"** on the login page:
-   You will instantly bypass login and access the full dashboard with all 29 algorithms and interactive visualizers!
-
----
-
-### Option B: Full-Stack Setup (Frontend + Backend + MongoDB)
+### Full-Stack Setup (Frontend + Backend + MongoDB)
 
 Use this setup to run the complete stack with database-persisted user authentication:
 
@@ -167,9 +144,9 @@ Use this setup to run the complete stack with database-persisted user authentica
 Navigate to the `backend/` folder and create your `.env` file:
 ```bash
 cd backend
-cp .env.example .env
+touch .env
 ```
-*(On Windows PowerShell, use: `copy .env.example .env`)*
+*(On Windows PowerShell, use: `New-Item .env -ItemType File`)*
 
 Open `backend/.env` and configure your MongoDB connection string:
 - **Local MongoDB**:
@@ -180,6 +157,12 @@ Open `backend/.env` and configure your MongoDB connection string:
   ```env
   MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/<database_name>
   ```
+
+For the AI chatbot, create `frontent/.env` and add a valid Gemini API key:
+```env
+VITE_GEMINI_API_KEY=your_gemini_api_key
+```
+Restart the Vite server after changing this file.
 
 #### 2. Install Backend Dependencies & Start Server (Terminal 1)
 ```bash

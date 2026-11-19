@@ -1,6 +1,7 @@
 const express = require('express');
-const userRouter = require('./routers/user.routes.js')
 const auth = require('./routers/auth.router.js');
+const wishlistRouter = require('./routers/wishlist.routes.js');
+const trackerRouter = require('./routers/tracker.routes.js');
 const cookieParser = require('cookie-parser');
 const app = express();
 const cors = require('cors');
@@ -14,7 +15,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/api/auth', auth);
-app.use('/api/user', userRouter);
+app.use('/api/user/wishlist', wishlistRouter);
+app.use('/api/user/tracker', trackerRouter);
 
 app.use((err,req,res,next)=>{
     console.log(err);
