@@ -41,10 +41,11 @@ auth.post('/signup', async (req, res) => {
         await PlatformData.create({ userId: user._id, handles: handles || {} });
         await Wishlist.create({ userId: user._id });
 
-        sendToken(res, user._id);
+        const token = sendToken(res, user._id);
         return res.status(201).json({
             message: 'User registered successfully',
-            user: await getUserData(user._id)
+            user: await getUserData(user._id),
+            token
         });
     } catch (err) {
         return res.status(500).json({ message: err.message });
@@ -64,10 +65,11 @@ auth.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        sendToken(res, user._id);
+        const token = sendToken(res, user._id);
         return res.status(200).json({
             message: 'Login successful',
-            user: await getUserData(user._id)
+            user: await getUserData(user._id),
+            token
         });
     } catch (err) {
         return res.status(500).json({ message: err.message });
@@ -156,10 +158,11 @@ auth.get('/live-stats', authMiddleware, async (req, res) => {
 });
 
 auth.get('/logout', (req, res) => {
+    const isProduction = process.env.NODE_ENV === 'production';
     res.clearCookie('token', {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
         path: '/'
     });
 
